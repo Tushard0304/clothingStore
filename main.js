@@ -29,12 +29,13 @@ let shopItemData = [{
     img:"./images/img-4.jpg"
 }]
 
-let basket = []
+let basket = JSON.parse(localStorage.getItem("data")) || []
 
 let generateshop =()=> {
     return (shop.innerHTML = shopItemData
         .map((x)=>{
             let { id, name, price, description, img } = x;
+            let search = basket.find((x)=> x.id === id)  || []
         return  `
         <div id=product-id-${id} class="image-item">
             <img  src=${img} alt="Image 1">
@@ -45,7 +46,9 @@ let generateshop =()=> {
                             <h2>$ ${price}</h2>
                             <div class="button">
                                  <i onclick="decrementHandler(${id})" class="ri-arrow-down-circle-fill"></i>
-                                <div id=${id} class="quantity">0</div>
+                                <div id=${id} class="quantity">
+                                ${search.item === undefined ? 0 : search.item}
+                                </div>
                                 <i onclick="incrementHandler(${id})" class="ri-arrow-up-circle-fill"></i>
                             </div>
                         </div>
@@ -69,7 +72,7 @@ let incrementHandler =(id)=>{
     }
    
     // console.log(basket)
-    localStorage.setItem("data" , basket)
+    localStorage.setItem("data" ,JSON.stringify(basket))
     update(selectedItem.id);
 }
 let decrementHandler =(id)=>{
@@ -80,6 +83,7 @@ let decrementHandler =(id)=>{
         search.item -= 1;
     }
     // console.log(basket)
+    localStorage.setItem("data" ,JSON.stringify(basket))
     update(selectedItem.id);
 }
 let update =(id)=>{
@@ -94,5 +98,6 @@ let update =(id)=>{
 let calculation =()=>{
     let cartIcon = document.getElementById("cartAmount")
     cartIcon.innerHTML = basket.map((x)=> x.item).reduce((x,y)=> x + y , 0)
-   
 }
+
+calculation(); // invoking the calculation so that every time i refresh the site it quickly calculates and give the value as it is
