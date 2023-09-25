@@ -1,33 +1,6 @@
 let shop = document.getElementById("shop")
 
-let shopItemData = [{
-    id:"item1",
-    name:"Casual Shirt",
-    price: 45,
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta.",
-    img:"./images/img-1.jpg"
-},
-{
-    id:"item2",
-    name:"Office Shirt",
-    price: 100,
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta.",
-    img:"./images/img-2.jpg"
-},
-{
-    id:"item3",
-    name:"T-Shirt",
-    price: 35,
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta.",
-    img:"./images/img-3.jpg"
-},
-{
-    id:"item4",
-    name:"Mens Suit",
-    price: 500,
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta.",
-    img:"./images/img-4.jpg"
-}]
+
 
 let basket = JSON.parse(localStorage.getItem("data")) || []
 
@@ -44,7 +17,7 @@ let generateshop =()=> {
                     <p>${description}</p>
                         <div class="more-information">
                             <h2>$ ${price}</h2>
-                            <div class="button">
+                            <div class="buttons">
                                  <i onclick="decrementHandler(${id})" class="ri-arrow-down-circle-fill"></i>
                                 <div id=${id} class="quantity">
                                 ${search.item === undefined ? 0 : search.item}
@@ -78,13 +51,16 @@ let incrementHandler =(id)=>{
 let decrementHandler =(id)=>{
     let selectedItem = id;
     let search = basket.find((x) => x.id === selectedItem.id)
-    if(search.item === 0) return;
+    if(search === undefined) return
+    else if(search.item === 0) return;
     else{
         search.item -= 1;
     }
     // console.log(basket)
-    localStorage.setItem("data" ,JSON.stringify(basket))
     update(selectedItem.id);
+    basket = basket.filter((x)=> x.item !== 0)
+    localStorage.setItem("data" ,JSON.stringify(basket))
+
 }
 let update =(id)=>{
     let search = basket.find((x) => x.id === id)
